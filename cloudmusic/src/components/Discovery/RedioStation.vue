@@ -20,24 +20,27 @@
                     </span>
                 </div>
                  <ul class="todyList">
-                    <li v-for="(item,index) in 4" :key="index">
-                        <img src="" alt="">
+                    <li v-for="(item,index) in radioList" :key="index">
+                        <img v-lazy="item.dj.backgroundUrl" alt="">
                         <div>
-                            <span class="playTitle">标题xxxxx</span>
+                            <span class="playTitle">{{item.name}}</span>
                             <span class="playContext">
                                 <span>节目:num</span>
-                                <span>介绍xxxxxxx</span>
+                                <span></span>
                             </span>
                         </div>
                     </li>
                 </ul>
-            </div>
-           
+            </div> 
+        </div>
+        <div class="bottom-title">
+            U2公司提供技术支持，请与980227856@qq.com联系
         </div>
     </div>
 </template>
 <script>
 import Focus from '@/components/Common/Focus'
+import {getRadioList} from '@/api/radio'
 export default {
     components:{Focus},
     data(){
@@ -48,11 +51,21 @@ export default {
                 {title:'付费精品', icon:'fa fa-btc fa-lg'},
                 {title:'小冰电台', icon:'fa fa-snowflake-o fa-lg'}
             ],
-            images:[]
+            images:[],
+            radioList:[]
+        }
+    },
+    methods:{
+        _getRadioList(search_name,num){
+            getRadioList(search_name,num).then((res)=>{
+                this.radioList = res.result.djRadios;
+                //console.log(this.radioList);
+            })
         }
     },
     created(){
         this.loadData('/api/focus2','get','images');
+        this._getRadioList('读书',10);
     }
 }
 </script>
@@ -100,6 +113,7 @@ export default {
             }
         }
         .content{
+              box-sizing: border-box;
             width:96%;
             padding:2%;
             margin-top:10px;
@@ -136,14 +150,19 @@ export default {
                             border-radius: 6px;
                         }
                         div{
-                            width:70%;
+                            width:65%;
                             padding:10px 0;
                             margin-left:5%;
                             display:flex;
                             flex-direction: column;
                             justify-content:space-around;
+                          
                             .playTitle{
                                 font-weight:bolder;
+                                width:60%;
+                                overflow: hidden;
+                                text-overflow:ellipsis;/*文字溢出的部分隐藏并用省略号代替*/
+			                    white-space:nowrap; //文字不会换行
                             }
                             .playContext{
                                 display:flex;
@@ -158,7 +177,10 @@ export default {
                     }
                 }
             }
-            
+        }
+        bottom-title{
+            width:100%;
+            height:30px;
         }
     }
 </style>

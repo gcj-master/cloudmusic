@@ -15,34 +15,48 @@
                 推荐歌单
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
-            <ul>
-                <li v-for="(item,index) in 6" :key="index">
-                    {{item}}
+            <ul v-if="songListData.length">
+                <li v-for="(item,index) in songListData" :key="index">
+                <img v-lazy="item.coverImgUrl" alt="">
+                <div>
+                   <span class="songName">{{item.name}}</span>
+                </div>
                 </li>
             </ul>
             <div class="title">
-                最新音乐
+                推荐音乐
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
-            <ul>
-                <li v-for="(item,index) in 6" :key="index">
-                    {{item}}
+            <ul v-if="songsData.length">
+                <li v-for="(item,index) in songsData" :key="index">
+                    <img v-lazy="item.al.picUrl" alt="">
+                    <div>
+                        <span class="songName">{{item.al.name}}</span>
+                        <!-- <span class="songAuthor">author</span> -->
+                    </div>
                 </li>
             </ul>
             <div class="title">
-                主播电台
+                推荐专辑
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
             <ul>
-                <li v-for="(item,index) in 6" :key="index">
-                    {{item}}
+                <li v-for="(item,index) in albumList" :key="index">
+                    <img v-lazy="item.picUrl" alt="">
+                    <div>
+                        <span  class="songName">{{item.name}}</span>
+                    </div>
                 </li>
             </ul>
+        </div>
+        <div class="bottom-title">
+            U2公司提供技术支持，请与980227856@qq.com联系
         </div>
     </div>
 </template>
 <script>
 import Focus from '@/components/Common/Focus'
+import {getSongPlayLiST,getSongList,getAlbumList} from '@/api/api'
 export default {
     components:{Focus},
     data(){
@@ -53,14 +67,42 @@ export default {
                 {title:'歌单', icon:'fa fa-align-center fa-lg'},
                 {title:'排行榜', icon:'fa fa-bar-chart fa-lg'}
             ],
-            images:[]
+            images:[],  //轮播图
+            songListData:[], //推荐歌单栏
+            songsData:[],    //推荐音乐栏
+            albumList:[]    //推荐专辑
+       
         }
     },
     methods:{
-
+         _getSongPlayLiST(search_name,num){
+            var that = this;
+            getSongPlayLiST(search_name,num).then((res) => {
+                that.songListData = res.result.playlists;
+                //console.log(that.songListData);
+            })  
+        },
+        _getSongList(search_name,num){
+            var that = this;
+            getSongList(search_name,num).then((res) => {
+                that.songsData = res.result.songs;
+                //console.log(that.songsData);
+            })  
+        },
+        _getAlbumList(search_name, num){
+            var that = this;
+            getAlbumList(search_name, num).then((res) => {
+                that.albumList = res.result.albums;
+                //console.log(that.albumList);
+            })
+        }
+  
     },
     created(){
         this.loadData('/api/focus','get','images');
+        this._getSongList('许巍',6);
+        this._getSongPlayLiST('小红莓',6);
+        this._getAlbumList('爵士',6);
     }
 }
 </script>
@@ -124,12 +166,45 @@ export default {
                 flex-wrap: wrap;
                 justify-content:space-between;
                 li{
-                    width:30%;
-                    height:110px;
-                    background:pink;
-                    margin:15px 0;
+                    width:32%;
+                    height:146px;
+                    margin:10px 0;
+                    display:flex;
+                    flex-direction:column;
+                    img{
+                        width:100%;
+                        height:108px;
+                        border-radius: 5px;
+                        overflow: hidden;
+                    }
+                    div{
+                        margin-top:8px;
+                        width:100%;
+                        height:38px;
+                        padding-left:5px;
+                        display: flex;
+                        flex-direction: column;
+                        .songName{
+                            width:100%;
+                            height:26px;
+                            font-size:13px;
+                            color:#000;
+                            margin-bottom:5px;
+                            overflow: hidden;
+                            text-overflow:ellipsis;/*文字溢出的部分隐藏并用省略号代替*/
+			               white-space: nowrap; //文字不会换行
+                        }
+                        .songAuthor{
+                            font-size:12px;
+                            color:rgb(59, 56, 56);
+                        }
+                    }
                 }
             }
+        }
+        bottom-title{
+            width:100%;
+            height:30px;
         }
     }
 </style>

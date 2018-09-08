@@ -13,9 +13,9 @@ const mixin = {
                 this.$axios.get(this.$axios.defaults.baseURL+url)
                 .then((response) => {
                     this[obj] = response.data;
-                    console.log(this[obj]);
+                    //console.log(this[obj]);
                 },(error)=>{
-                    console.log('error66');
+                    console.log('error');
                 })
             }
         }

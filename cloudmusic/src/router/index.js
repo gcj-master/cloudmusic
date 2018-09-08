@@ -16,6 +16,8 @@ const Video = () => import(/* webpackChunkName:"Video" */ '@/components/Video/Vi
 const Mine = () => import(/* webpackChunkName:"Mine" */ '@/components/Mine/Mine');
 //搜索
 const Search = () => import(/* webpackChunkName:"Search" */ '@/components/Search/Search');
+//播放界面
+const Play = () => import(/* webpackChunkName:"Search" */ '@/components/Play/Play');
 
 Vue.use(Router)
 export default new Router({
@@ -47,6 +49,7 @@ export default new Router({
     },
     {path:'/Video', component:Video, name:'video'},
     {path:'/Mine', component:Mine, name:'mine'},
-    {path:'/Search', component:Search, name:'search'}
+    {path:'/Search', component:Search, name:'search'},
+    {path:'/Play', component:Play, name:'play'}
   ]
 })

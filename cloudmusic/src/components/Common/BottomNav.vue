@@ -1,7 +1,7 @@
 <template>
     <div id="bottomNav">
         <div class="content">
-            <div class="cellLeft">
+            <div class="cellLeft" @click="$router.push({name:'play'})">
                 <img src="" alt="">
                 <div>
                     <span>歌曲名字</span>
@@ -41,7 +41,7 @@ export default {
             flex-direction: row;
             justify-content:space-between;
             .cellLeft{
-                width:28%;
+                width:70%;
                 display: flex;
                 flex-direction: row;
                 img{

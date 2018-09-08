@@ -4,9 +4,6 @@
             <i class="fa fa-bars fa-lg" aria-hidden="true"></i>
         </div>
         <ul class="cellCenter">
-            <!-- <li v-for="(item,index) in icons" :key="index" @click="pushTo(item.name,index)">
-                <i :class="item.icon" :style="index==$store.state.TopNavIndex?{color:'white'}:{color:'lightgray'}"></i>
-            </li> -->
             <li 
                 @click="pushTo(listView.name,listView.id)"
                 :style="listView.id==$store.state.TopNavIndex?{color:'white'}:{color:'lightgray'}"

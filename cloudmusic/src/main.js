@@ -16,6 +16,15 @@ import 'reset-css'
 //载入字体库
 import 'font-awesome/css/font-awesome.css'
 
+//图片懒加载
+import VueLazyLoad from 'vue-lazyload'
+Vue.use(VueLazyLoad, {
+  preLoad: 1.3,
+  error: '../static/images/error.png',
+  loading: '../static/images/loading.gif',
+  attempt: 1
+})
+
 /* eslint-disable no-new */
 //加载仓库
 import store from './store/index'
