@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 Vue.use(Vuex);
 
+import play from './play'
 const state = {
     //顶部导航切换高亮
     TopNavIndex: 1,
@@ -28,9 +29,13 @@ const mutations = {
 const actions = {
 
 }
+const modules = {
+    play
+}
 export default new Vuex.Store({
     state,
     getters,
     mutations,
-    actions
+    actions,
+    modules
 })

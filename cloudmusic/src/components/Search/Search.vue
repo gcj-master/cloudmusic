@@ -12,7 +12,7 @@
         <div class="songList">
             <ul v-if="searchData.length">
                 <li v-for="(item,index) in searchData" :key="index">
-                    <div class="songName">
+                    <div class="songName" @click="_getMusic(item)">
                         <span>{{item.name}}</span>
                         <span>{{item.al.name}}</span>
                     </div>
@@ -39,6 +39,7 @@
 <script>
 import BottomNav from '@/components/Common/BottomNav'
 import {getSearchList} from '@/api/search'
+import {mapMutations} from 'vuex' 
 export default {
     name: 'search',
     components:{
@@ -75,7 +76,15 @@ export default {
         addToSearch(e){
             this.$refs.searchName.value = e.target.innerText
             this.searchCon();
-        }
+        },
+        _getMusic(item){
+            //console.log(item);
+            this.setSong(item);
+        },
+        ...mapMutations({
+            setSong: 'SET_SONG'
+        })
+
     }
 }
 </script>
@@ -150,11 +159,13 @@ export default {
                     justify-content:space-between;
                     padding:10px;
                     .songName{
+                        width:90%;
                         display:flex;
                         flex-direction: column;
                         justify-content: center;
                         span:nth-child(1){
                             margin-bottom:8px;
+                            font-size:14px;
                         }
                         span:nth-child(2){
                             font-size:12px;
