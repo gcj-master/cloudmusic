@@ -24,7 +24,7 @@
             </li>
         </ul>
         <div class="cellRight">
-            <i @click="pushToView('search')" class="fa fa-search fa-lg" aria-hidden="true"></i>
+            <i @click="pushToView({name:'search'})" class="fa fa-search fa-lg" aria-hidden="true"></i>
         </div>
     </div>
 </template>
@@ -45,7 +45,7 @@ export default {
     },
     methods:{
         pushTo(name,index){
-            this.$router.push({name:name});
+            this.pushToView({name:name});
             this.$store.commit('TOPNAVTOGGLE',{selectedIndex:index});
             localStorage.setItem('topSelectedIndex',index);
         },
@@ -54,8 +54,10 @@ export default {
             //解决从其他栏目回到 'Discovery' 子栏目能够保留上一次的浏览位置 
             var childRoterName = this.$store.state.DiscoveryColumnRouterName;
             if(childRoterName){
-                this.$router.push({name:childRoterName});
+                this.pushToView({name:childRoterName});
+                //this.$router.push({name:childRoterName});
             }else{
+                this.pushToView({name:name});
                 this.$router.push({name:name});
             }
             

@@ -78,12 +78,13 @@ export default {
             this.searchCon();
         },
         _getMusic(item){
-            //console.log(item);
             this.setSong(item);
+            this.pushToView({name:'play'},{item:item});
         },
-        ...mapMutations({
-            setSong: 'SET_SONG'
-        })
+         ...mapMutations({
+             setSong: 'SET_SONG',
+             setIsPlay: 'SET_ISPLAY'
+         })
 
     }
 }

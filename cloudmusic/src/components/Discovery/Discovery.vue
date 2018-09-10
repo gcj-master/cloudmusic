@@ -27,7 +27,7 @@ export default {
     },
     methods:{
         pushTo(name,index){
-            this.pushToView(name);
+            this.pushToView({name:name});
             this.$store.commit('MIDDLENAVTOGGLE',{selectedIndex:index});
             localStorage.setItem('selectedIndex',index);
             //为了返回能够回到上一个停留位置因此要把最后点击的栏目路由名称保存下来

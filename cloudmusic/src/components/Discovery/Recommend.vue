@@ -16,7 +16,7 @@
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
             <ul v-if="songListData.length">
-                <li v-for="(item,index) in songListData" :key="index">
+                <li v-for="(item,index) in songListData" :key="index" @click="pushToPlayListStore(item)">
                 <img v-lazy="item.coverImgUrl" alt="">
                 <div>
                    <span class="songName">{{item.name}}</span>
@@ -28,7 +28,7 @@
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
             <ul v-if="songsData.length">
-                <li v-for="(item,index) in songsData" :key="index">
+                <li v-for="(item,index) in songsData" :key="index" @click="playSong(item)">
                     <img v-lazy="item.al.picUrl" alt="">
                     <div>
                         <span class="songName">{{item.al.name}}</span>
@@ -41,7 +41,7 @@
                 <i class="fa fa-angle-right" aria-hidden="true"></i>
             </div>
             <ul>
-                <li v-for="(item,index) in albumList" :key="index">
+                <li v-for="(item,index) in albumList" :key="index" @click="pushToAlbumListStore(item)">
                     <img v-lazy="item.picUrl" alt="">
                     <div>
                         <span  class="songName">{{item.name}}</span>
@@ -57,6 +57,9 @@
 <script>
 import Focus from '@/components/Common/Focus'
 import {getSongPlayLiST,getSongList,getAlbumList} from '@/api/api'
+import {getPlayList} from '@/api/getRecommend'
+import {getAlbum} from '@/api/getRecommend'
+import {mapMutations} from 'vuex'
 export default {
     components:{Focus},
     data(){
@@ -70,8 +73,8 @@ export default {
             images:[],  //轮播图
             songListData:[], //推荐歌单栏
             songsData:[],    //推荐音乐栏
-            albumList:[]    //推荐专辑
-       
+            albumList:[],    //推荐专辑
+           // playLists:[]    //存放歌单里的全部歌曲
         }
     },
     methods:{
@@ -95,13 +98,64 @@ export default {
                 that.albumList = res.result.albums;
                 //console.log(that.albumList);
             })
-        }
+        },
+        
+        //把歌单列表取出来
+         _getPlayList(id){
+            getPlayList(id).then((res)=>{
+                //console.log(res);
+                var playLists = res.playlist.tracks;
+                //提交歌单列表到仓库
+                this.addToPlaySongs({sourceData:playLists});
+                 //跳转页面->歌单页面
+                this.pushToView({name:'recommendPlayList'});
+            })
+        },
+        //把专辑列表取出来
+        _getAlbum(id){
+            getAlbum(id).then((res)=>{
+                var albumList = res.songs;
+                this.addToAlbumListSongs(albumList);
+                //console.log(res);
+                //跳转页面->歌单页面
+                this.pushToView({name:'recommendAlbumList'});
+            })
+        },
+        pushToPlayListStore(item){
+            //歌单信息上传仓库
+            this.addToPlayList(item);
+            //触发_getPlayList函数获取歌单列表
+            this._getPlayList(item.id); 
+        },
+
+        pushToAlbumListStore(item){
+            //专辑信息上传仓库
+            this.addToAlbumList(item);
+            //触发_getPlayList函数获取歌单列表
+            this._getAlbum(item.id);
+        },
+        //播放推荐单曲
+        playSong(item){
+            this.setSong(item);
+            this.setIsPlay(true);
+            this.$router.push({name:'play'});
+        },
+        ...mapMutations({
+            setSong:'SET_SONG',
+            setIsPlay: 'SET_ISPLAY',
+            addToPlayList:'ADDTO_PLAYLIST',
+            addToPlaySongs:'ADDTO_PLAYLISTSONGS',
+
+            addToAlbumList:'ADDTO_ALBUMLIST',
+            addToAlbumListSongs: 'ADDTO_ALBUMLISTSONGS'
+
+        })
   
     },
     created(){
         this.loadData('/api/focus','get','images');
         this._getSongList('许巍',6);
-        this._getSongPlayLiST('小红莓',6);
+        this._getSongPlayLiST('u2',6);
         this._getAlbumList('爵士',6);
     }
 }

@@ -9,6 +9,8 @@ const Discovery = () => import(/* webpackChunkName:"Discovery" */ '@/components/
 const Recommend = () => import(/* webpackChunkName:"Recommend" */ '@/components/Discovery/Recommend');
 const RedioStation = () => import(/* webpackChunkName:"RedioStation" */ '@/components/Discovery/RedioStation');
 const Friends = () => import(/* webpackChunkName:"Friends" */ '@/components/Discovery/Friends');
+const RecommendPlayList = () => import(/* webpackChunkName:"RecommendPlayList" */ '@/components/Discovery/RecommendPlayList'); 
+const RecommendAlbumList = () => import(/* webpackChunkName:"RecommendAlbumList" */ '@/components/Discovery/RecommendAlbumList'); 
 
 //视频
 const Video = () => import(/* webpackChunkName:"Video" */ '@/components/Video/Video');
@@ -33,7 +35,7 @@ export default new Router({
         {
           path:'Recommend',
           component:Recommend,
-          name:'recommend'
+          name:'recommend',
         },
         {
           path:'RedioStation',
@@ -50,6 +52,8 @@ export default new Router({
     {path:'/Video', component:Video, name:'video'},
     {path:'/Mine', component:Mine, name:'mine'},
     {path:'/Search', component:Search, name:'search'},
-    {path:'/Play', component:Play, name:'play'}
+    {path:'/Play', component:Play, name:'play'},
+    {path:'/RecommendPlayList',component:RecommendPlayList,name:'recommendPlayList'},
+    {path:'/RecommendAlbumList',component:RecommendAlbumList,name:'recommendAlbumList'}
   ]
 })

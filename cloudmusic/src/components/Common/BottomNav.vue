@@ -1,7 +1,7 @@
 <template>
     <div id="bottomNav">
         <div class="content">
-            <div class="cellLeft" @click="$router.push({name:'play'})">
+            <div class="cellLeft" @click="pushToView({name:'play'})">
                 <img src="" alt="">
                 <div>
                     <span>歌曲名字</span>

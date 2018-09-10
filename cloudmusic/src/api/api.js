@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-//获取歌单列表
+//获取歌单
 function getSongPlayLiST(search_name,num){
     const url = "https://api.imjad.cn/cloudmusic/";
     const params = {

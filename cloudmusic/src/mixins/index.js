@@ -5,8 +5,16 @@ const mixin = {
         }
     },
     methods:{
-        pushToView(item){
-            this.$router.push({name:item});
+        pushToView(item,params){
+            if(item instanceof String){
+                this.$router.push({name:item});
+            }
+            if(item.path){
+                this.$router.push({path:item.path})
+            }
+            if(item.name){
+                this.$router.push({name:item.name,params:params});
+            }
         },
         loadData(url,methods,obj){ 
             if(methods == 'get'){
@@ -18,7 +26,7 @@ const mixin = {
                     console.log('error');
                 })
             }
-        }
+        },
     }
 }
 
