@@ -4,6 +4,7 @@ Vue.use(Vuex);
 
 import play from './play'
 import recommend from './recommend'
+
 const state = {
     //顶部导航切换高亮
     TopNavIndex: 1,

@@ -91,4 +91,4 @@ function getMVDetail(mv_id){
         return Promise.resolve(response.data);
     })
 }
-export {getSongPlayLiST,getSongList,getSongDetail,getAlbumList}
+export {getSongPlayLiST,getSongList,getSongDetail,getAlbumList,getMVList,getMVDetail}
