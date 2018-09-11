@@ -57,8 +57,6 @@
 <script>
 import Focus from '@/components/Common/Focus'
 import {getSongPlayLiST,getSongList,getAlbumList} from '@/api/api'
-import {getPlayList} from '@/api/getRecommend'
-import {getAlbum} from '@/api/getRecommend'
 import {mapMutations} from 'vuex'
 export default {
     components:{Focus},
@@ -74,7 +72,6 @@ export default {
             songListData:[], //推荐歌单栏
             songsData:[],    //推荐音乐栏
             albumList:[],    //推荐专辑
-           // playLists:[]    //存放歌单里的全部歌曲
         }
     },
     methods:{
@@ -99,40 +96,18 @@ export default {
                 //console.log(that.albumList);
             })
         },
-        
-        //把歌单列表取出来
-         _getPlayList(id){
-            getPlayList(id).then((res)=>{
-                //console.log(res);
-                var playLists = res.playlist.tracks;
-                //提交歌单列表到仓库
-                this.addToPlaySongs({sourceData:playLists});
-                 //跳转页面->歌单页面
-                this.pushToView({name:'recommendPlayList'});
-            })
-        },
-        //把专辑列表取出来
-        _getAlbum(id){
-            getAlbum(id).then((res)=>{
-                var albumList = res.songs;
-                this.addToAlbumListSongs(albumList);
-                //console.log(res);
-                //跳转页面->歌单页面
-                this.pushToView({name:'recommendAlbumList'});
-            })
-        },
+
         pushToPlayListStore(item){
-            //歌单信息上传仓库
-            this.addToPlayList(item);
-            //触发_getPlayList函数获取歌单列表
-            this._getPlayList(item.id); 
+            //跳转页面->歌单页面 并把歌单对象传过去
+            this.pushToView({name:'recommendPlayList'},{params:item});
+            //localStorage只能存储字符串所以把对象转换为字符串
+            localStorage.setItem('PLAYLISTID',JSON.stringify(item));
         },
 
         pushToAlbumListStore(item){
-            //专辑信息上传仓库
-            this.addToAlbumList(item);
-            //触发_getPlayList函数获取歌单列表
-            this._getAlbum(item.id);
+            //跳转页面->歌单页面 并把专辑对象传过去
+            this.pushToView({name:'recommendAlbumList'},{params:item});
+            localStorage.setItem('ALBUMLIST',JSON.stringify(item));
         },
         //播放推荐单曲
         playSong(item){
@@ -143,12 +118,6 @@ export default {
         ...mapMutations({
             setSong:'SET_SONG',
             setIsPlay: 'SET_ISPLAY',
-            addToPlayList:'ADDTO_PLAYLIST',
-            addToPlaySongs:'ADDTO_PLAYLISTSONGS',
-
-            addToAlbumList:'ADDTO_ALBUMLIST',
-            addToAlbumListSongs: 'ADDTO_ALBUMLISTSONGS'
-
         })
   
     },

@@ -7,14 +7,14 @@
             </div>
             <div class="picMsg">
                 <div class="coverImg">
-                    <img v-lazy="playListMsg.coverImgUrl" alt="">
+                    <img v-lazy="playListPic" alt="">
                 </div>
-                <span class="title">{{playListMsg.name}}</span>
+                <span class="title">{{playListName}}</span>
             </div>
         </div>
         <div class="content">
             <ul>
-                <li v-for="(item,index) in playListSongs" :key="item.id" @click="_getMusic(item)">
+                <li v-for="(item,index) in songLists" :key="item.id" @click="_getMusic(item)">
                     <span class="songMessage">
                         <span class="num">{{index+1}}</span>
                         <span class="songName">
@@ -29,24 +29,28 @@
     </div>
 </template>
 <script> 
-
+import {getPlayList} from '@/api/getRecommend'
 import {mapGetters,mapMutations} from 'vuex'
 export default {
     data(){
         return {
-
+            playListPic:'',
+            playListName:'',
+            songLists:[],
         }
-    },
-    computed:{
-        ...mapGetters([
-            'playListMsg',
-            'playListSongs',
-        ])
     },
     methods:{
         goBack(){
             this.$router.go(-1);
         },
+         //把歌单列表取出来
+         _getPlayList(id){
+            getPlayList(id).then((res)=>{
+                var playLists = res.playlist.tracks;
+                this.songLists = playLists;
+            })
+        },
+
         _getMusic(item){
             this.setSong(item);
             this.pushToView({name:'play'},{item:item});
@@ -55,6 +59,14 @@ export default {
              setSong: 'SET_SONG',
             
          })
+    },
+    created(){ 
+        
+        var obj = JSON.parse(localStorage.getItem('PLAYLISTID'));
+        var item = this.$route.params.params?this.$route.params.params:obj;
+        this.playListPic = item.coverImgUrl;
+        this.playListName = item.name; 
+        this._getPlayList(item.id);
     }
 }
 </script>

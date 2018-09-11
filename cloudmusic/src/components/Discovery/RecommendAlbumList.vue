@@ -7,14 +7,14 @@
             </div>
             <div class="picMsg">
                 <div class="coverImg">
-                    <img v-lazy="albumListMSG.picUrl" alt="">
+                    <img v-lazy="albumPic" alt="">
                 </div>
-                <span class="title">{{albumListMSG.name}}</span>
+                <span class="title">{{albumName}}</span>
             </div>
         </div>
         <div class="content">
             <ul>
-                <li v-for="(item,index) in albumListSongs" :key="index" @click="_getMusic(item)">
+                <li v-for="(item,index) in albumLists" :key="index" @click="_getMusic(item)">
                     <span class="songMessage">
                         <span class="num">{{index+1}}</span>
                         <span class="songName">
@@ -29,12 +29,14 @@
     </div>
 </template>
 <script> 
-
+import {getAlbum} from '@/api/getRecommend'
 import {mapGetters,mapMutations} from 'vuex'
 export default {
     data(){
         return {
-
+            albumPic:'',
+            albumName:'',
+            albumLists:[]
         }
     },
     computed:{
@@ -47,6 +49,14 @@ export default {
         goBack(){
             this.$router.go(-1);
         },
+         //把专辑列表取出来
+        _getAlbum(id){
+            getAlbum(id).then((res)=>{
+                var albumList = res.songs;
+                this.albumLists=albumList;
+               
+            })
+        },
         _getMusic(item){
             this.setSong(item);
             this.pushToView({name:'play'},{item:item});
@@ -55,6 +65,14 @@ export default {
              setSong: 'SET_SONG'
          })
     },
+    created(){
+        var saveAlbumObj = JSON.parse(localStorage.getItem('ALBUMLIST'));
+        var item= this.$route.params.params ? this.$route.params.params : saveAlbumObj;
+        this.albumPic = item.blurPicUrl;
+        this.albumName = item.name;
+        this._getAlbum(item.id);
+        console.log(item);
+    }
 }
 </script>
 <style lang="scss" scoped>

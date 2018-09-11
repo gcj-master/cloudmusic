@@ -6,7 +6,7 @@
         <ul class="content">
             <li v-for="(item, index) in mvList" :key="index">
                 <div class="mv">
-                    <video :src="mvs[index]"></video>
+                    <video :src="mvs[index]" controls></video>
                 </div>
                 <div class="mvTitle">{{item.name}}</div>
             </li>
@@ -72,10 +72,10 @@ export default {
                  box-sizing: border-box;
                  margin-bottom:10px;
                  .mv{
-                    background:blue;
                     width:100%;
-                    height:260px;
+                    height:200px;
                     border-radius:5px;
+                    overflow:hidden;
                     video{
                         width:100%;
                         height:100%;
