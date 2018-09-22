@@ -1,10 +1,11 @@
+
 <template>
-    <div id="play">
+    <div id="play" v-show="isShow">
         <div class="play-bg">
             <img src="" alt="">
         </div>
         <div class="play-header">
-            <div class="play-header-left" @click="goBack()">
+            <div class="play-header-left"  @click="ishide()">
                 <i class="fa fa-chevron-down" aria-hidden="true"></i>
             </div>
             <div class="play-header-center">
@@ -17,14 +18,14 @@
         </div>
         <div class="play-pic">
             <div class="play-pic-box">
-                <img v-lazy="song.al.picUrl" alt="">
-                <!-- <img src="" alt=""> -->
+                <img :src="song.al.picUrl" alt="">
+                <!-- <img v-lazy="song.al.picUrl" alt=""> -->
             </div>
         </div>
         <div class="play-control">
             <div class="play-control-other">
-                <i class="fa fa-heart-o fa-lg" aria-hidden="true"></i>
-                <i style="display:none" class="fa fa-heart fa-lg" aria-hidden="true"></i>
+                <i v-show="!collectionIcon" @click="addToCollection(song)" class="fa fa-heart-o fa-lg" aria-hidden="true"></i>
+                <i v-show="collectionIcon" @click="cancelToCollection(song)" style="color:red" class="fa fa-heart fa-lg" aria-hidden="true"></i>
                 <i  class="fa fa-download fa-lg" aria-hidden="true"></i>
                 <i class="fa fa-ellipsis-v fa-lg" aria-hidden="true"></i>
             </div>
@@ -32,15 +33,15 @@
                 <span>{{progressTime1}}</span>
                 <progress class="progress" :value="progressTime" :max="progressEnd"></progress>
                 <span>{{progressEnd1}}</span>
-                <audio style="display:none" controls autoplay  id="audio" :src="songMp3">
+                <audio style="display:none"  id="audio" :src="songMp3">
                     <source src="" id="" />
                 </audio>
             </div>
             <div class="play-control-c">
                 <i class="fa fa-random fa-2x" aria-hidden="true"></i>
                 <i class="fa fa-step-backward fa-2x" aria-hidden="true"></i>
-                <i v-show="!isPlay" class="fa fa-play fa-2x" aria-hidden="true" @click="play()"></i>
-                <i v-show="isPlay" class="fa fa-pause fa-2x" aria-hidden="true" @click="play()"></i>
+                <i v-show="!isplay" class="fa fa-play fa-2x" aria-hidden="true" @click="play()"></i>
+                <i v-show="isplay" class="fa fa-pause fa-2x" aria-hidden="true" @click="play()"></i>
                 <i class="fa fa-step-forward fa-2x" aria-hidden="true"></i>
                 <i class="fa fa-outdent fa-2x" aria-hidden="true"></i>
             </div>
@@ -57,7 +58,7 @@ export default {
             progressEnd: 0,     //进度条的maxvalue
             progressTime1: '00:00', //显示歌曲进度条所在的时间
             progressEnd1: '00:00', //歌曲的总时间
-            songMp3: '', //存放歌曲的src地址
+          
             isCollect: false,    //判断是否收藏
 
             songFromSearch:{}
@@ -65,25 +66,17 @@ export default {
     },
     computed:{
         ...mapGetters([
-            'isPlay',
-            'song'
+            'isplay',
+            'song',
+            'songMp3',
+            'isShow',
+            'collectionIcon'
         ])
     },
 
     watch: {
-        isPlay(){ //监测歌曲播放和暂停按钮的切换，并控制播放
-            if(!this.song.id){
-                //console.log('第一次不存在歌曲');
-                this.songMp3="https://m8.music.126.net/20180910143943/54d408bd87dbdc10a9af4c7f51156d3e/ymusic/6da4/0fdb/d656/c90fa76e55e473efc49c99d67b1a8117.mp3"
-                this.setSong({
-                     al:{
-                        name:'许巍',
-                        picUrl:'https://p1.music.126.net/OHzbyGhLdNatFNExPNkD4Q==/6670737045790111.jpg'
-                    },
-                    name: '蓝莲花'
-                })
-            }
-            if(this.isPlay && this.songMp3.length){
+        isplay(){ //监测歌曲播放和暂停按钮的切换，并控制播放
+            if(this.isplay && this.songMp3.length){
                 document.querySelector('audio').play(); //如果按钮是播放状态并且有歌曲时开始播放
             }else{
                 document.querySelector('audio').pause(); //暂停
@@ -91,31 +84,47 @@ export default {
         },
     //监测歌曲是否改变从而获取歌曲的播放地址
         songFromSearch(){
-            this.setIsPlay(true);
             var that = this;
             getSongDetail(that.song.id).then((res)=>{
-               // console.log(res.data[0].url);
-                that.songMp3 = res.data[0].url;
-                //console.log('1234'+that.songMp3);
+                this.setSongMp3(res.data[0].url);
             })
+
+            // document.querySelector('#Audio').autoplay=true; //歌曲准备就绪自动播放
+            // this.setIsPlay(true);   //播放按钮状态为播放状态
         }
+        
     },
     methods:{
-        goBack(){
-            this.$router.go(-1);
+        ishide(){
+            this.setIsShow(!this.isShow);
         },
         //控制
         play(){
-            this.setIsPlay(!this.isPlay);
+            this.setIsPlay(!this.isplay);
             //console.log(this.isPlay);
+        },
+        //添加收藏
+        addToCollection(song){
+            this.setCollection(song);
+            this.setCollectionIcon(!this.collectionIcon);
+        },
+        //取消收藏
+        cancelToCollection(song){
+            this.cancelToCollectionIcon(song);
+            this.setCollectionIcon(!this.collectionIcon);
         },
         ...mapMutations({
             setIsPlay: 'SET_ISPLAY',
-            setSong: 'SET_SONG'
+            setSong: 'SET_SONG',
+            setSongMp3:'SET_SONGMAP3',
+            setIsShow:'SET_ISSHOW',
+            setCollection: 'SET_COLLECTION',
+            setCollectionIcon:'SET_COLLECTIONICON',
+            cancelToCollectionIcon:'CANCEL_COLLECTION'
         })
     },
-    created(){
-        this.songFromSearch = this.$route.params.item;
+    updated(){
+        this.songFromSearch = this.$store.getters.song;
     }
 }
 </script>
@@ -246,5 +255,4 @@ export default {
         }
     }
 </style>
-
 

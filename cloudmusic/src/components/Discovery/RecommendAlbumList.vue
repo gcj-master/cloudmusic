@@ -42,9 +42,11 @@ export default {
     computed:{
         ...mapGetters([
             'albumListMSG',
-            'albumListSongs'
+            'albumListSongs',
+            'isShow'
         ])
     },
+    
     methods:{
         goBack(){
             this.$router.go(-1);
@@ -59,10 +61,11 @@ export default {
         },
         _getMusic(item){
             this.setSong(item);
-            this.pushToView({name:'play'},{item:item});
+            this.setIsShow(!this.isShow);
         },
          ...mapMutations({
-             setSong: 'SET_SONG'
+            setSong: 'SET_SONG',
+            setIsShow:'SET_ISSHOW'
          })
     },
     created(){

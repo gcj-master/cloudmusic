@@ -16,6 +16,12 @@ import 'reset-css'
 //载入字体库
 import 'font-awesome/css/font-awesome.css'
 
+//element-ui
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
+
+
 //图片懒加载
 import VueLazyLoad from 'vue-lazyload'
 Vue.use(VueLazyLoad, {

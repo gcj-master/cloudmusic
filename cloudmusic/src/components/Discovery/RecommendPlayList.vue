@@ -39,6 +39,11 @@ export default {
             songLists:[],
         }
     },
+    computed:{
+        ...mapGetters([
+            'isShow'
+        ])
+    },
     methods:{
         goBack(){
             this.$router.go(-1);
@@ -53,20 +58,20 @@ export default {
 
         _getMusic(item){
             this.setSong(item);
-            this.pushToView({name:'play'},{item:item});
+            this.setIsShow(!this.isShow);
         },
          ...mapMutations({
              setSong: 'SET_SONG',
-            
+             setIsShow:'SET_ISSHOW'
          })
     },
     created(){ 
-        
         var obj = JSON.parse(localStorage.getItem('PLAYLISTID'));
         var item = this.$route.params.params?this.$route.params.params:obj;
         this.playListPic = item.coverImgUrl;
         this.playListName = item.name; 
         this._getPlayList(item.id);
+        console.log(item);
     }
 }
 </script>

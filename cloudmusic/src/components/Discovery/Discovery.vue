@@ -9,8 +9,11 @@
                 {{item.title}}
             </li>
         </ul>
+        
         <transition name="focus">
+            <keep-alive>
             <router-view/>
+            </keep-alive>
         </transition>  
     </div>
 </template>

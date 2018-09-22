@@ -1,28 +1,86 @@
 <template>
-    <div id="bottomNav">
+    <div id="bottomNav"  v-show="!isShow">
         <div class="content">
-            <div class="cellLeft" @click="pushToView({name:'play'})">
-                <img src="" alt="">
+            <div class="cellLeft" @click="ishide()">
+                <img :src="song.al.picUrl" alt="">
                 <div>
-                    <span>歌曲名字</span>
-                    <span>演唱者</span>
+                    <span>{{song.name}}</span>
+                    <span>{{song.al.name}}</span>
                 </div>
             </div>
             <div class="cellRight">
-                <span>
-                    <i class="fa fa-play-circle-o fa-2x" aria-hidden="true"></i>
-                    <!-- <i class="fa fa-pause-circle-o" aria-hidden="true"></i> -->
+                <span >
+                    <i v-show="!isplay" class="fa fa-play-circle-o fa-2x" @click="play()"></i>
+                    <i v-show="isplay" class="fa fa-pause-circle-o fa-2x" @click="play()"></i> 
                 </span>
                 <span>
                     <i class="fa fa-list-ul fa-2x" aria-hidden="true"></i>
                 </span>
             </div>
+             
+        </div>
+        <div class="audi">
+            <audio style="display:none" id="Audio" controls  :src="songMp3">
+                   
+            </audio> 
         </div>
     </div>
 </template>
 <script>
+import {getSongDetail} from '@/api/api'
+import {mapGetters,mapMutations} from 'vuex'
 export default {
-    
+    data(){
+        return {
+             songFromSearch : ''
+        }
+    },
+    computed: {
+        ...mapGetters([
+            'song',
+            'isplay',
+            'songMp3',
+            'isShow'
+        ])
+    },
+    watch: {
+        //监测歌曲播放和暂停按钮的切换，并控制播放
+        isplay(){
+            if(this.isplay && this.songMp3.length){
+                document.querySelector('#Audio').play(); //如果按钮是播放状态并且有歌曲时开始播放
+            }else{
+                document.querySelector('#Audio').pause(); //暂停
+            }
+        },
+    //监测歌曲是否改变从而获取歌曲的播放地址
+        songFromSearch(){
+            var that = this;
+            getSongDetail(that.song.id).then((res)=>{
+                this.setSongMp3(res.data[0].url);
+            })
+
+            document.querySelector('#Audio').autoplay=true; //歌曲准备就绪自动播放
+            this.setIsPlay(true);   //播放按钮状态为播放状态
+        }
+    },
+    methods:{
+        play(){  
+             this.setIsPlay(!this.isplay);
+        },
+        ishide(){
+            this.setIsShow(!this.isShow);
+        },
+        ...mapMutations({
+            setIsPlay: 'SET_ISPLAY',
+           
+            setSongMp3:'SET_SONGMAP3',
+            setIsShow:'SET_ISSHOW'
+        })
+    },
+    updated(){
+        this.songFromSearch = this.$store.getters.song;
+        localStorage.setItem('SONGFROMSEARCH',JSON.stringify(this.$store.getters.song));
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -33,7 +91,7 @@ export default {
         height:50px;
         background:white;
         border-top:1px solid rgb(230, 227, 227);
-        
+         z-index:101;
         .content{
             width:96%;
             padding:2%;
@@ -75,6 +133,10 @@ export default {
                 color:rgb(114, 107, 107);
             }
         }
+    }
+    .audi{
+        width:100%;
+        height:30px;
     }
 </style>
 

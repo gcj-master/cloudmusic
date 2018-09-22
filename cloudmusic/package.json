@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "element-ui": "^2.4.7",
     "font-awesome": "^4.7.0",
     "node-sass": "^4.9.3",
     "reset-css": "^4.0.1",

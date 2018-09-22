@@ -96,7 +96,6 @@ export default {
                 //console.log(that.albumList);
             })
         },
-
         pushToPlayListStore(item){
             //跳转页面->歌单页面 并把歌单对象传过去
             this.pushToView({name:'recommendPlayList'},{params:item});
@@ -113,11 +112,11 @@ export default {
         playSong(item){
             this.setSong(item);
             this.setIsPlay(true);
-            this.$router.push({name:'play'});
         },
         ...mapMutations({
             setSong:'SET_SONG',
             setIsPlay: 'SET_ISPLAY',
+            setSongMp3:'SET_SONGMAP3'
         })
   
     },
@@ -125,7 +124,12 @@ export default {
         this.loadData('/api/focus','get','images');
         this._getSongList('许巍',6);
         this._getSongPlayLiST('u2',6);
-        this._getAlbumList('爵士',6);
+        this._getAlbumList('王菲',6);
+    
+        let songfromsearch = JSON.parse(localStorage.getItem('SONGFROMSEARCH'));
+        if(songfromsearch){
+            this.$store.commit('SET_SONG',songfromsearch);
+        }  
     }
 }
 </script>

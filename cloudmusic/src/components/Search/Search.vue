@@ -39,7 +39,7 @@
 <script>
 import BottomNav from '@/components/Common/BottomNav'
 import {getSearchList} from '@/api/search'
-import {mapMutations} from 'vuex' 
+import {mapGetters,mapMutations} from 'vuex' 
 export default {
     name: 'search',
     components:{
@@ -52,17 +52,19 @@ export default {
         }
     },
     computed:{
-        
+        ...mapGetters([
+            'isShow'
+        ])
     },
     methods:{
         goBack(){
-            this.$router.go(-1);
+            this.$router.push({name:'discovery'});
         },
         searchCon(){
             //console.log(this.$refs.searchName.value);
             var that = this;
-            
             var searchName = this.$refs.searchName.value.trim();
+
             getSearchList(searchName).then((res)=>{
                 if(res.code == 200){
                     that.searchData =  res.result.songs;
@@ -79,13 +81,21 @@ export default {
         },
         _getMusic(item){
             this.setSong(item);
-            this.pushToView({name:'play'},{item:item});
+            this.setIsShow(!this.isShow);
+            this.setIsCollectionIcon(false);
         },
+
          ...mapMutations({
              setSong: 'SET_SONG',
-             setIsPlay: 'SET_ISPLAY'
+             setIsPlay: 'SET_ISPLAY',
+             setIsShow:'SET_ISSHOW',
+             setIsCollectionIcon:'SET_COLLECTIONICON'
          })
 
+    },
+    created(){
+        // let songfromsearch = JSON.parse(localStorage.getItem('SONGFROMSEARCH'));
+        // this.$store.commit('SET_SONG',songfromsearch);
     }
 }
 </script>
