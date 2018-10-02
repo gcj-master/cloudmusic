@@ -19,7 +19,7 @@
     后台接口使用了某大牛封装的api,接口具体调用方法请参考：https://api.imjad.cn/cloudmusic.md
 
 项目实现说明：
-    页面且的切换使用vue-router实现，详细代码 src/router/index.js
+    页面且的切换使用vue-router实现，详细代码 src/router/index.js <br />
     项目的数据状态共享 vuex实现
     轮播图插件  vue-awesome-swiper   安装：npm install vue-awesome-swiper --save
     图片懒加载插件 vue-lazyload   安装：npm install vue-lazyload -D
