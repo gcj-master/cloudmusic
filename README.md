@@ -1,6 +1,6 @@
 # cloudmusic
 
-音乐播放器app
+音乐播放器app(培训班毕业作品，留作纪念)
 
 查看：
   在server文件夹启动 node server.js
