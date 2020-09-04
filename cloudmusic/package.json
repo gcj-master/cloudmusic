@@ -13,7 +13,7 @@
     "axios": "^0.18.0",
     "element-ui": "^2.4.7",
     "font-awesome": "^4.7.0",
-    "node-sass": "^4.9.3",
+    "node-sass": "^4.13.1",
     "reset-css": "^4.0.1",
     "sass-loader": "^7.1.0",
     "vue": "^2.5.2",
